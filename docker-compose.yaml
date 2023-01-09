@@ -17,6 +17,9 @@ services:
     restart: always
     volumes: 
       - ./src/backend/:/usr/src/app/
+      - ./config/parameters.ini:/usr/src/app/parameters.ini.sample:ro
+    env_file:
+      - .env
     depends_on:
       - mqtt
 
@@ -28,6 +31,7 @@ services:
     restart: always
     volumes:
       - ./src/backend:/usr/src/app
+      - ./config/parameters.ini:/usr/src/app/parameters.ini:ro
     ports:
       - "8000:8000"
 
@@ -36,8 +40,8 @@ services:
     container_name: broker_postgres
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWD}
     logging:
       options:
         max-size: 10m
