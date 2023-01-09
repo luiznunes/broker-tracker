@@ -31,7 +31,8 @@ services:
     restart: always
     volumes:
       - ./src/backend:/usr/src/app
-      - ./config/parameters.ini:/usr/src/app/parameters.ini:ro
+    depends_on:
+      - main
     ports:
       - "8000:8000"
 
