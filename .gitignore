@@ -1,2 +1,5 @@
 src/backend/parameters.ini*
 postgres-data
+.env
+src/backend/__pycache__
+.idea

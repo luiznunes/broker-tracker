@@ -38,7 +38,7 @@ services:
 
   postgres:
     image: postgres:13
-    container_name: broker_postgres
+    container_name: broker-postgres
     restart: always
     environment:
       - POSTGRES_USER=${PG_USER}
