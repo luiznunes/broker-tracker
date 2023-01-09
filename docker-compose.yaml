@@ -1,0 +1,49 @@
+version: '3.7'
+services:
+  mqtt:
+    image: eclipse-mosquitto:2.0
+    container_name: broker-mqtt
+    restart: always
+    volumes:
+      - ./config/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    ports:
+      - 1883:1883
+
+  main:
+    build:
+      context: ./dockerfiles
+      dockerfile: Dockerfile-main
+    container_name: broker-main
+    restart: always
+    volumes: 
+      - ./src/backend/:/usr/src/app/
+    depends_on:
+      - mqtt
+
+  api:
+    build:
+      context: ./dockerfiles
+      dockerfile: Dockerfile-api
+    container_name: broker-api
+    restart: always
+    volumes:
+      - ./src/backend:/usr/src/app
+    ports:
+      - 8000:8000
+
+  postgres:
+    image: postgres:13
+    container_name: broker_postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - '5432:5432'
+    volumes: 
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./config/sql/create-tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
